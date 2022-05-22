@@ -2,4 +2,4 @@
 
 
 
-This is a small bulletin board with ode.js.
+This is a small bulletin board with Node.js.
