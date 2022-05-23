@@ -4,11 +4,17 @@ const port = 3000
 const connect = require("./schemas");
 connect();
 
-
-app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static('static'))
 
-app.get('/', (req, res)=> {
+const postsRouter = require("./routes/posts")
+app.use('', [postsRouter])
+
+
+
+
+app.get('', (req, res)=> {
     res.send('hi! this is main page')
 })
 
