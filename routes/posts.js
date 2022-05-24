@@ -13,7 +13,6 @@ router.post ('/posts', async (req, res) => {
            }
            const createdPosts = await Post.create({ postsId, password, title, date, contents })
             res.json ({ posts : createdPosts });
-
         }catch(error){
             console.log(error)
         }
@@ -51,7 +50,6 @@ router.put('/post/:_id', async (req, res) => {
 router.delete('/post/:_id', async (req, res) => {
     const {_id} = req.params
     
-
     const existId = await Post.find({ _id : _id})
     if (existId.length > 0 ){
         await Post.deleteOne({_id })
