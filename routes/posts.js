@@ -11,6 +11,7 @@ router.post ('/posts', async (req, res) => {
            if (posts.length) {
                return res.status(400).json({ success: false, errorMessage: "제목 도배 못하지롱" })
            }
+           const date = new Date()
            const createdPosts = await Post.create({ postsId, password, title, date, contents })
             res.json ({ posts : createdPosts });
             
