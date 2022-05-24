@@ -13,6 +13,7 @@ router.post ('/posts', async (req, res) => {
            }
            const createdPosts = await Post.create({ postsId, password, title, date, contents })
             res.json ({ posts : createdPosts });
+            
         }catch(error){
             console.log(error)
         }

@@ -1,13 +1,14 @@
 const mongoose = require("mongoose")
 
+
 const postsSchema = new mongoose.Schema({
     postsId : {
         type : String,
-        required : true,
+        
     },
     password : {
         type : String, 
-        required: true,
+        
     },
     title : {
         type: String,
@@ -15,6 +16,7 @@ const postsSchema = new mongoose.Schema({
     },
     date : {
         type: Date,
+        default:Date.now(),
         required : true,
     },
     contents: {
