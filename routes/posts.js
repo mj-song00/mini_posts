@@ -39,8 +39,8 @@ router.put('/post/:_id', async (req, res) => {
     const {_id} = req.params
     const { postsId, password, title, contents } = req.body
 
-    const existId = await Post.findOne({ _id : _id})
-    if (existId.password === password ){
+    // const existId = await Post.findOne({ _id : _id})
+    if (post.password === password ){
         await Post.updateOne({_id: postsId} , { $set : { title, contents, }})
         res.json({ success: true })
     }else {
