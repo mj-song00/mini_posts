@@ -9,7 +9,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static('static'))
 
 const postsRouter = require("./routes/posts")
-app.use('', [postsRouter])
+const userRouter = require('./routes/users')
+app.use('', [postsRouter, userRouter])
 
 
 
