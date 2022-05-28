@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--jqueryimport-->  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+  integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+  crossorigin="anonymous"></script>   -->
+  <title>Document</title>
+    <script>
+        const queryString = window.location.search;
+        //console.log(queryString)
+        const urlParams = new URLSearchParams(queryString);
+        // console.log(urlParams)
+        const boardId = urlParams.get("postsId"); 
+
+        
+      $(document).ready(function(){
+          get_detail();
+       })
+    //상세페이지 보여주기
+        function get_detail(){
+           //$("#board").empty();
+            $.ajax({
+               type: "GET",
+                url: `/post/${boardId}`,
+                data: {},
+                success: function(response){
+                  console.log(response)
+                  let boardDetail = response["posts"]
+                 console.log(boardDetail)
+                  $("#title").text(boardDetail["title"]);
+                  $("#postsId").text(boardDetail["postsId"]);
+                  $("#contents").text(boardDetail["contents"]);
+                  $("#date").text(boardDetail["date"]).toLocaleString();
+                  
+                }
+            })
+          }
+  </script>
+</head>
+<body>
+   
+    <div>
+        <h1>상세 페이지</h1>
+      </div>
+      <div>
+        <label id="author" >아이디:</label>
+      </div>
+      <div><label id="title" >제목</label> 
+          </div>
+        </div>
+      </div>
+     </label></div>
+      <div><label id="date" >작성일:</label></div>
+      <div class="wiriting-view-box">
+        <div>
+          <div>
+            <label id="contents"> </label> 
+            <br>
+           <button onclick="location.href='/write.html';">글쓰기</button>  <button onclick="location.href='/edit?postsId='+`${boardId}`">수정 </button> 
+</body>
+</html>

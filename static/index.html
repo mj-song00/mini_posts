@@ -10,10 +10,22 @@
     src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
     integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script> -->
     <title>Document</title>
-    <sytle>
-
+    <style>
+       table {
+        width: 100%;
+        border-top: 1px solid #444444;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border-bottom: 1px solid #444444;
+        padding: 10px;
+      }
+      .button {
+        margin-bottom: 30px;
+      }
           
-    </sytle>
+    </style>
     <script>
         $(document).ready(function () {
           show_board();
@@ -21,21 +33,23 @@
         function show_board() {
           $.ajax({
             type: "GET",
-            url: `/api/board`,
+            url: `/post`,
             data: {},
             success: function (response) {
-              let board = response["posts"];
-              for (let i = 0; i < posts.length; i++) {
-                let title = posts[i]["title"];
-                let postsId = posts[i]["postsId"];
-                let date = new Date(posts[i]["date"]).toLocaleString();
+              let board = response["post"];
+              console.log(board)
+              for (let i = 0; i < board.length; i++) {
+                let title =  board[i]["title"];
+                let postsId =  board[i]["postsId"];
+                let date = new Date(board[i]["date"]).toLocaleString();
+        
                 let temp_html = `<tr>
-                                <td><a href='/detail?postsId=${posts[i]["_id"]}'>${title}</a></td>
+                                <td><a href='/detail?postsId=${board[i]["_id"]}'>${title}</a></td>
                                 <td>${postsId}</td>
                                 <td>${date}</td>
-                              </tr>`;
+                              </tr>`
                
-                $("#posts-table").append(temp_html);
+                $("#board-table").append(temp_html);
               }
             },
           });
@@ -43,9 +57,10 @@
       </script>
 </head>
 <body>
-    <div>
-        <button onclick="location.href='/write';">글쓰기</button>
-      </div>
+  <div>
+    <button onclick="location.href='/write.html';">글쓰기</button>
+    <button onclick="location.href='/login.html';">회원가입</button>
+  </div>
       <div>
         <table id="board-table">
           <tbody>
@@ -54,6 +69,7 @@
               <td>작성자</td>
               <td>작성일</td>
             </tr>
+
           </tbody>
         </table>
       </div>

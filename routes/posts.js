@@ -13,7 +13,9 @@ router.post ('/posts', async (req, res) => {
            }
            const date = new Date()
            const createdPosts = await Post.create({ postsId, password, title, date, contents })
-            res.json ({ posts : createdPosts });
+            res.json ({ 
+                posts : createdPosts,
+                result: "success" });
             
         }catch(error){
             console.log(error)
@@ -42,7 +44,7 @@ router.put('/post/:_id', async (req, res) => {
     const existId = await Post.findById({ _id : _id})
     if (existId.password === password ){
         await Post.updateOne({_id: _id} , { $set : { title, contents, }})
-        res.json({ success: true })
+        res.json({ result: "success"})
     }else {
         return res.status(400).json({ success: false, errorMessage: "비밀번호 틀렸지롱" })
     }
@@ -50,14 +52,16 @@ router.put('/post/:_id', async (req, res) => {
 
 //삭제
 router.delete('/post/:_id', async (req, res) => {
-    const {_id} = req.params
+    const {_id, password} = req.params
     
-    const existId = await Post.find({ _id : _id})
-    if (existId.length > 0 ){
+    const existId = await Post.findOne({ _id : _id})
+    if (password !== existId.password){
         await Post.deleteOne({_id })
+        res.json({ result: "success"})
+    }else{
+        res.json({ result: "false"})
     }
 
-    res.json({ result: "success"})
 
 })
 
