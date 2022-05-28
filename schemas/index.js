@@ -4,6 +4,8 @@ const connect = () => {
   mongoose
     .connect("mongodb://localhost:27017/mini_posts", {
       ignoreUndefined: true,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     })
     .catch(err => console.log(err));
 };

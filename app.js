@@ -16,7 +16,7 @@ app.use('', [postsRouter, userRouter])
 
 
 app.get('', (req, res)=> {
-    res.send('hi! this is main page')
+    res.render(index)
 })
 
 app.listen(port, () => {
