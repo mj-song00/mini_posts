@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 3000
+const path = require('path')
 const connect = require("./schemas");
 connect();
 
@@ -14,9 +15,16 @@ app.use('', [postsRouter, userRouter])
 
 
 
+app.get('', (req, res) => {
+  res.sendFile(path.join(__dirname +'/static/index.html' ))
+})
 
-app.get('', (req, res)=> {
-    res.render(index)
+app.get('/detail', (req, res) => {
+    res.sendFile(path.join(__dirname +'/static/detail.html' ))
+})
+
+app.get('/edit', (req, res) => {
+    res.sendFile(path.join(__dirname +'/static/edit.html' ))
 })
 
 app.listen(port, () => {
