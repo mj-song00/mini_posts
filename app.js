@@ -27,6 +27,14 @@ app.get('/edit', (req, res) => {
     res.sendFile(path.join(__dirname +'/static/edit.html' ))
 })
 
+app.get('/sign_in', (req, res) => {
+  res.sendFile(path.join(__dirname +'/static/sign_in.html' ))
+})
+
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname +'/static/login.html' ))
+})
+
 app.listen(port, () => {
     console.log(`listening at http://localhost:${port}`)
   })

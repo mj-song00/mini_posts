@@ -36,7 +36,7 @@ router.get('/post/:_id', async (req, res) => {
     res.json({ posts })
 })
 
-//수정 으아아아아 제발 수정되지마 ㅠㅠ  비밀번호 안넣었다고 ㅜㅜ 어 막혔다 !! 근데 비밀번호 어떻게 넣지 ㅠㅠ 어 끝났다!!
+//수정 
 router.put('/post/:_id', async (req, res) => {
     const {_id} = req.params
     const { password, title, contents } = req.body

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!--jqueryimport-->  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Document</title>
+    <script>
+        function sign_in(){
+            $.ajax({
+                type: "POST",
+                url: `/users`,
+                data: {
+                // 회원가입
+                email : $("#email").val(),
+                password: $("#password").val(),
+                confirmPassword : $("#confirmPassword").val(),
+      
+            },
+            success: function(response){
+            if (response['result'] === "success") {
+            alert("글이 등록 되었습니다.");
+            window.location.href="/"
+            }else{
+                res.send({ 
+                    errorMessage,
+                })
+            }
+        }  
+      })
+        }
+    </script>
+</head>
+    <body>
+        <div>
+            <p>회원가입</p>
+            
+            <p>이메일 <input id="email" type="email"></p>
+            <p>비밀번호 <input id="password" type="password"></p>
+            <p>비밀번호 확인 <input id="confirmPassword" type="confirmPassword"> </p>
+    
+            <button onclick="sign_in()"> 가입하기 </button>  <button onclick="location.href='/index.html'"> 홈 </button>
+        </div>
+
+    </body>
+</html>
