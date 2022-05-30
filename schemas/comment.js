@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const commentSchema = new mongoose.Schema({
-    commentId : {
+    nickname : {
         type : String,
         
     },
@@ -19,3 +19,6 @@ const commentSchema = new mongoose.Schema({
         required: true,
     }
 })
+
+
+module.exports = mongoose.model("Comment", commentSchema)

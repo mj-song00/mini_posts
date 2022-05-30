@@ -4,13 +4,13 @@ const Comment = require("../schemas/comment")
 
 //댓글 저장
 router.post('/post/:_id/comments', async (req, res) => {
-    const { commentId, password, date, comments } = req.body;
+    const { nickname, date, comments } = req.body;
   try{
-      createComments = await  Comment.create({
-          commentId, password, date, comments 
+      const createdComments = await  Comment.create({
+           date, comments, nickname
       })
       res.json({
-          comments : createComments,
+          comments : createdComments,
           result: "success"
       })
   }catch(error){
@@ -19,23 +19,14 @@ router.post('/post/:_id/comments', async (req, res) => {
 
 })
 
-//전체 댓글 불러오기
+//댓글 불러오기
 router.get('/post/:_id/comments', async (req, res) => {
-  const { commentId, comments} = req.body;
-try{
-    createComments = await  Comment.find({
-        commentId
-    })
-    res.json({
-        comments
-    })
-  }catch(error){
-    console.log(error)
-  }  
-})
+  const comment = await Comment.find()
+  res.json({ comment })
+  })
+
 
 //특정 댓글 수정
-
 router.patch('/post/:_id/comments/:commentId', async(req, res)=> {
 
   const {commentId} = req.params
