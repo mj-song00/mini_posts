@@ -1,44 +1,68 @@
 const express = require("express");
 const router = express.Router();
+const Post = require("../schemas/post");
 const Comment = require("../schemas/comment")
+const jwt = require('jsonwebtoken')
+const authMiddleware = require("../middlewares/auath-middleware")
+// const { cookie } = require("express/lib/response");
 
 //댓글 저장
-router.post('/post/:_id/comments', async (req, res) => {
-    const { nickname, date, comments } = req.body;
+router.post('/post/:_id/comments', authMiddleware,async (req, res) => {
+    const {  comments } = req.body;
+    const {_id} = req.params
+    const nickname = res.locals.user.nickname
+    console.log(comments, _id, nickname)
+   
   try{
-      const createdComments = await  Comment.create({
-           date, comments, nickname
+      if (comments === null) return res.send({ result:false});
+
+      const newComment = await Comment.create({
+        comments, _id, nickname, 
       })
       res.json({
-          comments : createdComments,
+          comment:  newComment,
           result: "success"
+
       })
   }catch(error){
     console.log(error)
-  }  
-
+      // res.status(400).json({ success:false, message:"실패"})
+    }
+   
+    
+  
+  
 })
+  
 
 //댓글 불러오기
-router.get('/post/:_id/comments', async (req, res) => {
-  const comment = await Comment.find()
-  res.json({ comment })
+router.get('/:postid/comments', async (req, res) => {
+  const {postid} = req.params
+  try{
+    const comments = await Comment.find({ postid})
+    
+    const post = await Post.findOne({ postid })
+    res.status(200).json({ comments, post })
+  }catch(error){
+    console.log(error)
+  }
   })
 
 
 //특정 댓글 수정
-router.patch('/post/:_id/comments/:commentId', async(req, res)=> {
+router.patch('/post/:_id/comments/:id', async(req, res)=> {
 
-  const {commentId} = req.params
+  const {_id} = req.params
   const { comments } = req.body
   
-  const existId = await Comment.findById({commentId : commentId})
-  if (existId) {
-    await Comment.updateOne({commentId:commentId}, {set : {comments}})
-    res.json({ result:"success"})
-  }else{
-    return res.status(400).json({ success: false })
-  }
+  const existId = await Comment.findOne({_id :_id})
+    if (existId) {
+      await Comment.updateOne({_id : _id}, {set : {comments}})
+      res.json({ result:"success"})
+    }else{
+      return res.status(400).json({ success: false })
+    }
+
 })
 
 
@@ -56,3 +80,13 @@ router.delete('/post/:_id/comments/:commentId', async (req, res) =>{
 })
 
 module.exports = router;
+
+//private functions
+function checkPostId(req, res, next){ // 1
+  Post.findOne({_id:req.query.postId},function(err, post){
+    if(err) return res.json(err);
+
+    res.locals.post = post; // 1
+    next();
+  });
+}

@@ -29,17 +29,18 @@
                 url: `/post/${boardId}`,
                 data: {},
                 success: function(response){
-                  console.log(response)
+            
                   let boardDetail = response["posts"]
-                 console.log(boardDetail)
+           
                   $("#title").text(boardDetail["title"]);
-                  $("#postsId").text(boardDetail["postsId"]);
+                  $("#postsId").text(boardDetail["nickname"]);
                   $("#contents").text(boardDetail["contents"]);
                   $("#date").text(boardDetail["date"]).toLocaleString();
                   
                 }
             })
           }
+          // 댓글 
   </script>
 </head>
 <body>
@@ -56,10 +57,18 @@
       </div>
      </label></div>
       <div><label id="date" >작성일:</label></div>
+      
       <div class="wiriting-view-box">
         <div>
           <div>
             <label id="contents"> </label> 
+            <br>
+            <p></p>
+            <div>댓글목록</div>
+            <table> 
+              <td>작성자</td>
+              <td>내용</td>
+              </table>
             <br>
            <button onclick="location.href='/write.html';">글쓰기</button>  <button onclick="location.href='/edit?postsId='+`${boardId}`">수정 </button> 
 </body>

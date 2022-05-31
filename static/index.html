@@ -37,10 +37,11 @@
             data: {},
             success: function (response) {
               let board = response["post"];
-              console.log(board)
+        
               for (let i = 0; i < board.length; i++) {
                 let title =  board[i]["title"];
-                let postsId =  board[i]["postsId"];
+                let postsId =  board[i]["nickname"];
+            
                 let date = new Date(board[i]["date"]).toLocaleString();
         
                 let temp_html = `<tr>

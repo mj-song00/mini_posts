@@ -1,18 +1,20 @@
 const express = require("express");
 const router = express.Router();
 const Post = require("../schemas/post");
-
+const authMiddleware = require("../middlewares/auath-middleware")
 
 //글 저장
-router.post ('/posts', async (req, res) => {
-       const { postsId, password, title, date, contents } = req.body;
+router.post ('/posts', authMiddleware ,async (req, res) => {
+       const {  title, date, contents } = req.body;
+       const nickname = res.locals.user.nickname
+       
        try{
            const posts = await Post.find({ title });
            if (posts.length) {
                return res.status(400).json({ success: false, errorMessage: "같은 제목 도배 못하지롱" })
            }
            const date = new Date()
-           const createdPosts = await Post.create({ postsId, password, title, date, contents })
+           const createdPosts = await Post.create({  title, date, contents, nickname})
             res.json ({ 
                 posts : createdPosts,
                 result: "success" });
@@ -33,6 +35,7 @@ router.get('/post', async (req, res) => {
 router.get('/post/:_id', async (req, res) => {
     const {_id } = req.params
     const posts = await Post.findOne({_id })
+
     res.json({ posts })
 })
 
