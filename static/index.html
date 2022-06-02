@@ -37,16 +37,18 @@
             data: {},
             success: function (response) {
               let board = response["post"];
-        
+              console.log(board)
               for (let i = 0; i < board.length; i++) {
-                let title =  board[i]["title"];
-                let postsId =  board[i]["nickname"];
-            
-                let date = new Date(board[i]["date"]).toLocaleString();
+                let postId = board[i]['PostId'];
+                let title =  board[i]["PostTitle"];
+                let postAuthorId =  board[i]["PostAuthorId"];
+                let date = new Date(board[i]["PostDate"]).toLocaleString();
+                console.log(postId, title, postAuthorId, date)
         
                 let temp_html = `<tr>
-                                <td><a href='/detail?postsId=${board[i]["_id"]}'>${title}</a></td>
-                                <td>${postsId}</td>
+                                <td>${postId}</td>
+                                <td><a href='/detail?postsId=${board[i]["PostId"]}'>${title}</a></td>
+                                <td>${postAuthorId}</td>
                                 <td>${date}</td>
                               </tr>`
                
@@ -58,15 +60,16 @@
       </script>
 </head>
 <body>
-  <div>
+  <!-- <div>
     <button onclick="location.href='/write.html';">글쓰기</button>
     <button onclick="location.href='/join.html';">회원가입</button>
     <span><button onclick="location.href='/login.html'">로그인</button></span> 
-  </div>
+  </div> -->
       <div>
         <table id="board-table">
           <tbody>
             <tr>
+              <td>번호</td>
               <td>제목</td>
               <td>작성자</td>
               <td>작성일</td>

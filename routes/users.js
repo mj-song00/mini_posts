@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken")
 
 //회원 가입
 router.post('/users', async (req, res) => {
-    const {email, nickname, password, confirmPassword } = req.body
+    const {email, userId, nickname, password, confirmPassword } = req.body
     const pattern = "^[A-Za-z][A-Za-z0-9_]*$";
     try{
                const existsUser = await User.findOne({
@@ -39,7 +39,7 @@ router.post('/users', async (req, res) => {
                 })
                 return
             }
-            const createUser = await User.create({ email, nickname, password})
+            const createUser = await User.create({ email, nickname, password, userId})
             res.json({ 
                 users : createUser,
                 result: "success"
@@ -54,13 +54,17 @@ router.post('/users', async (req, res) => {
 })
 
 router.post('/auth', async (req, res)=> {
-    const {email, password} = req.body
+    const {userId, password} = req.body
 
-    const user = await User.findOne({email})
+    const user = await User.findOne({
+        
+           userId
+        
+        })
     
     if(!user || password !==user.password){
         res.status(400).send({
-            errorMessage: '닉네임 또는 패스워드를 확인해주세요'
+            errorMessage: '이메일 또는 패스워드를 확인해주세요'
         })
         return
     }

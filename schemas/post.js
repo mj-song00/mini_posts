@@ -1,27 +1,39 @@
 const mongoose = require("mongoose")
 
+
 const postsSchema = new mongoose.Schema({
-    title : {             //제목
+    PostTitle : {             //제목
         type: String,
         required : true,
     },
-    date : {                //생성일자
+    PostDate : {                //생성일자
         type: Date,
         default:Date.now(),
         required : true,
     },
-    contents: {             //내용
+    PostContents: {             //내용
         type: String,
         required: true,
     },
-    nickname: {         //가입시 닉네임
-        type: String,
-        ref: 'User',
+    // postnickname: {         //가입시 닉네임
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'User',
+    // },
+    PostId:{             // 1. 게시물 번호
+        type: Number,
+        required: true,
     },
-    comments : {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'comments'
-    }
+    PostAuthorId: {
+        type: String,
+        required: true,
+    },
+    comments : [{
+        type:mongoose.Schema.Types.ObjectId, 
+        ref: 'Comment', 
+
+    }]
+        
+    
     
         
                //댓글

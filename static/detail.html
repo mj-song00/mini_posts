@@ -20,6 +20,7 @@
         
       $(document).ready(function(){
           get_detail();
+          get_comments()
        })
     //상세페이지 보여주기
         function get_detail(){
@@ -29,18 +30,42 @@
                 url: `/post/${boardId}`,
                 data: {},
                 success: function(response){
-            
+                  
                   let boardDetail = response["posts"]
-           
-                  $("#title").text(boardDetail["title"]);
-                  $("#postsId").text(boardDetail["nickname"]);
-                  $("#contents").text(boardDetail["contents"]);
-                  $("#date").text(boardDetail["date"]).toLocaleString();
+                  console.log(boardDetail)
+                  $("#title").text(boardDetail["PostTitle"]);
+                  $("#postsId").text(boardDetail["PostAuthorId"]);
+                  $("#contents").text(boardDetail["PostContents"]);
+                  $("#date").text(boardDetail["PostDate"]).toLocaleString();
                   
                 }
             })
           }
           // 댓글 
+          function get_comments(){
+           //$("#board").empty();
+            $.ajax({
+               type: "GET",
+                url: `/${boardId}/comments`,
+                data: {},
+                success: function(response){
+                 let comments = response['commentList']
+                 console.log(comments)
+                 for (let i =0; i < comments.length; i++){
+                   let author = comments[i]["commentAuthorId"]
+                   let comment = comments[i]["commentContent"]
+                   let date = new Date(comments[i]["createdAt"]).toLocaleString()
+                   let temp_html =`  <td >${author}</td>
+                                        <td >${comment}</td>
+                                        <td >${date}</td>`
+  
+                                        $("#comment-table").append(temp_html);
+                 }
+               
+                
+                                    }
+            })
+          }
   </script>
 </head>
 <body>
@@ -65,9 +90,10 @@
             <br>
             <p></p>
             <div>댓글목록</div>
-            <table> 
-              <td>작성자</td>
-              <td>내용</td>
+            <table id="comment-table"> 
+              <td id = "author">작성자</td>
+              <td id="comment">내용</td>
+              <td id="time">시간</td>
               </table>
             <br>
            <button onclick="location.href='/write.html';">글쓰기</button>  <button onclick="location.href='/edit?postsId='+`${boardId}`">수정 </button> 

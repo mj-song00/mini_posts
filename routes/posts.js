@@ -1,20 +1,35 @@
 const express = require("express");
 const router = express.Router();
-const Post = require("../schemas/post");
+const Posts = require("../schemas/post");
+const Comments = require('../schemas/comment')
 const authMiddleware = require("../middlewares/auath-middleware")
+const jwt =require("jsonwebtoken")
 
 //글 저장
 router.post ('/posts', authMiddleware ,async (req, res) => {
-       const {  title, date, contents } = req.body;
-       const nickname = res.locals.user.nickname
-       
+       const { PostTitle, PostContents } = req.body;
+       const PostObject = await Posts.findOne().sort({PostDate : -1}); //포스트 날짜 기준 가장 마지막 게시물 가져옴   
+       let PostId = 1;
+       if(PostObject){
+           PostId = PostObject.PostId + 1;
+        }else{ //아직 하나도 게시된게 없으면 1번임
+            PostId = 1;
+        }
+        const {authorization} = req.headers
+            console.log(authorization)
+        const [tokenType, tokenValue] = authorization.split(' ');
+        const decoded = jwt.verify(tokenValue, "estell");
+           console.log(decoded)
+        const PostAuthorId = decoded.userId;
+        const PostDate = new Date();
+           
        try{
-           const posts = await Post.find({ title });
-           if (posts.length) {
-               return res.status(400).json({ success: false, errorMessage: "같은 제목 도배 못하지롱" })
-           }
-           const date = new Date()
-           const createdPosts = await Post.create({  title, date, contents, nickname})
+           
+           const createdPosts = await Posts.create({  
+               PostAuthorId,
+               PostId, 
+               PostTitle, 
+               PostDate, PostContents })
             res.json ({ 
                 posts : createdPosts,
                 result: "success" });
@@ -26,44 +41,52 @@ router.post ('/posts', authMiddleware ,async (req, res) => {
 
 //전체 글 불러오기
 router.get('/post', async (req, res) => {
-    const post = await Post.find()
+    const post = await Posts.find().sort()
     res.json({ post })
 
 })
 
 //상세 글 불러오기
-router.get('/post/:_id', async (req, res) => {
-    const {_id } = req.params
-    const posts = await Post.findOne({_id })
+router.get('/post/:PostId', async (req, res) => {
+    const {PostId } = req.params
+    const posts = await Posts.findOne({PostId})
+    return res.json({ posts })
+    })
 
-    res.json({ posts })
-})
+
 
 //수정 
-router.put('/post/:_id', async (req, res) => {
-    const {_id} = req.params
-    const { password, title, contents } = req.body
+router.put('/post/:PostId', authMiddleware,async (req, res) => {
+    const {PostId} = req.params
+    const { PostTitle, PostContents } = req.body
 
-    const existId = await Post.findById({ _id : _id})
-    if (existId.password === password ){
-        await Post.updateOne({_id: _id} , { $set : { title, contents, }})
-        res.json({ result: "success"})
-    }else {
-        return res.status(400).json({ success: false, errorMessage: "비밀번호 틀렸지롱" })
+    const post = await Posts.findOne({ PostId : Number(PostId)})
+    console.log(post)
+    if (!post){
+         res.status(400)
+        .json({ success:false, errorMessage:"해당 post가 존재하지 않아 수정할 수 없습니다." });
     }
+    await Posts.updateOne({ PostId: Number(PostId) }, { $set: {  PostTitle, PostContents } });    
+    res.status(201)
+    .json({ success:true, editedPosts : { 
+        PostTitlet: post.PostTitle,
+        PostContents: post.PostContents
+                                    } });
 })
 
 //삭제
-router.delete('/post/:_id', async (req, res) => {
-    const {_id, password} = req.params
+router.delete('/post/:PostId', authMiddleware,async (req, res) => {
+    const {PostId } = req.params
     
-    const existId = await Post.findOne({ _id : _id})
-    if (password !== existId.password){
-        await Post.deleteOne({_id })
-        res.json({ result: "success"})
-    }else{
-        res.json({ result: "false"})
-    }
+    const post = await Posts.findOne({ PostId : Number(PostId)})
+    if (!post){
+        res.status(400)
+       .json({ success:false, errorMessage:"해당 post가 존재하지 않아 삭제할 수 없습니다." });
+   }
+   await Posts.deleteOne({ PostId: Number(PostId) });
+   res.status(201)
+        .json({ success:true });
+    await Comments.deleteMany({ commentTargetPostId: Number(PostId) });
 
 
 })
