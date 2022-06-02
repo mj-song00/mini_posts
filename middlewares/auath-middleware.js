@@ -13,13 +13,14 @@ module.exports = (req, res, next ) => {
     }
 
     try{ //검증
-        const {userId} = jwt.verify(tokenValue, "estell")
+        const decoded = jwt.verify(tokenValue, "estell")
         //유저가 항상있다고 가정하고  locals라는 공간에 담는다
         //이 미들웨어를 사용하는 곳에서 공통적으로 사용가능 => 편하다.
         // 근데 강의랑 다르게 아무것도 안뜨는데??
-        User.findOne(userId).exec().then((user) => {
+        User.findOne({ userId: decoded.userId}).then((user) => {
             res.locals.user = user 
-            next()
+           
+            //next()
         })
     } catch(error){
         res.status(401).send({
@@ -27,4 +28,5 @@ module.exports = (req, res, next ) => {
         })
     return
     }
+    next()
 }
