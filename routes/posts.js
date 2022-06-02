@@ -9,18 +9,20 @@ const jwt =require("jsonwebtoken")
 router.post ('/posts', authMiddleware ,async (req, res) => {
        const { PostTitle, PostContents } = req.body;
        const PostObject = await Posts.findOne().sort({PostDate : -1}); //포스트 날짜 기준 가장 마지막 게시물 가져옴   
+   
        let PostId = 1;
        if(PostObject){
            PostId = PostObject.PostId + 1;
         }else{ //아직 하나도 게시된게 없으면 1번임
             PostId = 1;
         }
+
         const {authorization} = req.headers
-            console.log(authorization)
         const [tokenType, tokenValue] = authorization.split(' ');
         const decoded = jwt.verify(tokenValue, "estell");
-           console.log(decoded)
+        
         const PostAuthorId = decoded.userId;
+
         const PostDate = new Date();
            
        try{

@@ -55,6 +55,7 @@
                    let author = comments[i]["commentAuthorId"]
                    let comment = comments[i]["commentContent"]
                    let date = new Date(comments[i]["createdAt"]).toLocaleString()
+                   
                    let temp_html =`  <td >${author}</td>
                                         <td >${comment}</td>
                                         <td >${date}</td>`
@@ -96,6 +97,6 @@
               <td id="time">시간</td>
               </table>
             <br>
-           <button onclick="location.href='/write.html';">글쓰기</button>  <button onclick="location.href='/edit?postsId='+`${boardId}`">수정 </button> 
+           <!-- <button onclick="location.href='/write.html';">글쓰기</button>  <button onclick="location.href='/edit?postsId='+`${boardId}`">수정 </button>  -->
 </body>
 </html>

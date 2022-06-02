@@ -9,9 +9,8 @@ const authMiddleware = require("../middlewares/auath-middleware")
 //댓글 저장
 router.post('/:PostId/comments', authMiddleware,async (req, res) => {
     const { commentContent } = req.body;
-    const {postid} = req.params
+    const {PostId} = req.params
     const lastCommentObject = await Comment.findOne().sort({commentDate: -1});
-    console.log(comments, postid,lastCommentObject  )
     let lastCommentId = 1;
     if(lastCommentObject){
         lastCommentId = lastCommentObject.commentId + 1;
@@ -28,11 +27,11 @@ router.post('/:PostId/comments', authMiddleware,async (req, res) => {
            const commentDate = new Date();
 
   try{
-      if (comments === null) return res.send({ result:false});
+      if (commentContent === null) return res.send({ result:false});
 
       const newComment = await Comment.create({
         commentId : lastCommentId,
-        commentTargetPostId : postid,
+        commentTargetPostId : PostId,
         commentAuthorId : commentAuthorId,
         commentContent,
         commentDate 
@@ -44,8 +43,8 @@ router.post('/:PostId/comments', authMiddleware,async (req, res) => {
 
       })
   }catch(error){
-    console.log(error)
-      // res.status(400).json({ success:false, message:"실패"})
+    //console.log(error)
+      res.status(400).json({ success:false, message:"실패"})
     }
 })
   
